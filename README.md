@@ -1,0 +1,1 @@
+# workflow-type-check-action
