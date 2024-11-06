@@ -32,7 +32,8 @@ runs:
       run: |
         echo "Setting pipeline type..."
         # Should build if it's a push to main, a non-draft PR, or a PR with '[build]' in the title
+        echo ${{ steps.vars.outputs.isPR }} 
         echo ${{ steps.vars.outputs.isPR || (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}
-        echo "doBuild=${{ (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}" >> $GITHUB_OUTPUT
-        echo "doRelease=false" >> $GITHUB_OUTPUT
-        echo "checkRelease=false" >> $GITHUB_OUTPUT
+        echo "doBuild=${{ steps.vars.outputs.isPR || (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}" >> $GITHUB_OUTPUT
+        echo "doRelease=${{ steps.vars.outputs.isRelease }}" >> $GITHUB_OUTPUT
+        echo "checkRelease=${{ steps.vars.outputs.isPreRelease }}" >> $GITHUB_OUTPUT
