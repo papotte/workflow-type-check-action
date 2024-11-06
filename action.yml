@@ -26,12 +26,13 @@ runs:
         echo "isTag=${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}" >> $GITHUB_OUTPUT
         echo "isDraft=${{ github.event_name == 'release' && github.event.release.draft }}" >> $GITHUB_OUTPUT
         echo "isPreRelease=${{ github.event_name == 'release' && github.event.release.prerelease }}" >> $GITHUB_OUTPUT
-        echo "forceBuild=${{ github.event.commits == null }}" >> $GITHUB_OUTPUT
+        echo "forceBuild=${{ contains(github.event.pull_request.title, '[build]') }}" >> $GITHUB_OUTPUT
     - id: set-type
       shell: bash
       run: |
         echo "Setting pipeline type..."
-        echo ${{ steps.vars.outputs.isPush }}
-        echo "doBuild=false" >> $GITHUB_OUTPUT
+        # Should build if it's a push to main or a PR with '[build]' in the title
+        echo ${{ (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}
+        echo "doBuild=${{ (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}" >> $GITHUB_OUTPUT
         echo "doRelease=false" >> $GITHUB_OUTPUT
         echo "checkRelease=false" >> $GITHUB_OUTPUT
