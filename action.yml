@@ -4,13 +4,13 @@ description: 'An action to set context variables for workflows'
 outputs:
   doBuild:
     description: "should build the project."
-    value: ${{ steps.check.outputs.doBuild }}
+    value: ${{ steps.set-type.outputs.doBuild }}
   doRelease:
     description: "should release the project."
-    value: ${{ steps.check.outputs.doRelease }}
+    value: ${{ steps.set-type.outputs.doRelease }}
   checkRelease:
     description: "should check the release is viable, but not release."
-    value: ${{ steps.check.outputs.checkRelease }}
+    value: ${{ steps.set-type.outputs.checkRelease }}
 
 runs:
   using: 'composite'
@@ -32,8 +32,14 @@ runs:
       run: |
         echo "Setting pipeline type..."
         # Should build if it's a push to main, a non-draft PR, or a PR with '[build]' in the title
-        echo ${{ steps.vars.outputs.isPR }} 
-        echo ${{ steps.vars.outputs.isPR || (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}
-        echo "doBuild=${{ steps.vars.outputs.isPR || (steps.vars.outputs.isPush && steps.vars.outputs.isMainBranch) || steps.vars.outputs.forceBuild }}" >> $GITHUB_OUTPUT
+        forceBuild=${{ steps.vars.outputs.forceBuild }}
+        isPR=${{ steps.vars.outputs.isPR }}
+        isPush=${{ steps.vars.outputs.isPush }}
+        isMainBranch=${{ steps.vars.outputs.isMainBranch }}
+        if $forceBuild || $isPR || ($isPush && $isMainBranch); then
+          echo "doBuild=true" >> $GITHUB_OUTPUT
+        else
+          echo "doBuild=false" >> $GITHUB_OUTPUT
+        fi
         echo "doRelease=${{ steps.vars.outputs.isRelease }}" >> $GITHUB_OUTPUT
         echo "checkRelease=${{ steps.vars.outputs.isPreRelease }}" >> $GITHUB_OUTPUT

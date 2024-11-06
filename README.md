@@ -12,6 +12,9 @@ steps in the workflow.
 - name: Check workflow type
   uses: quouch/check-workflow-type-action@v1
   id: check-workflow-type
+- name: Build action
+  if: steps.check-workflow-type.outputs.doBuild
+  run: echo "This is a push workflow"
 ```
 
 ## Testing with [act](https://nektosact.com)

@@ -7,9 +7,7 @@ on:
   pull_request:
   release:
     types:
-      - created
-      - prereleased
-      - released
+      - published
 
 jobs:
   check:
@@ -21,17 +19,14 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github.event) }}
         run: |
           echo "$GITHUB_CONTEXT"
-      - name: move action
+      - name: Move action
         run: |
           ls -la
           mkdir -p actions/workflow-type-check-action
           mv action.yml actions/workflow-type-check-action
       - uses: ./actions/workflow-type-check-action
         name: Prepare Workspace
-  test:
-    runs-on: ubuntu-latest
-    needs: check
-    steps:
-      - run: echo ${{ needs.check.outputs.doBuild }}
-      - run: echo ${{ needs.check.outputs.doRelease }}
-      - run: echo ${{ needs.check.outputs.checkRelease }}
+        id: sets
+      - run: echo ${{ steps.sets.outputs.doBuild }}
+      - run: echo ${{ steps.sets.outputs.doRelease }}
+      - run: echo ${{ steps.sets.outputs.checkRelease }}
