@@ -1,0 +1,14 @@
+{
+  "commits": [
+    {
+      "message": "add forceBuild condition"
+    }
+  ],
+  "created": false,
+  "deleted": false,
+  "forced": true,
+  "head_commit": {
+    "message": "add forceBuild condition"
+  },
+  "ref": "refs/heads/main"
+}

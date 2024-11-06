@@ -1,0 +1,17 @@
+{
+  "action": "opened",
+  "pull_request": {
+    "base": {
+      "ref": "main"
+    },
+    "body": null,
+    "changed_files": 5,
+    "draft": false,
+    "head": {
+      "ref": "another_branch"
+    },
+    "labels": [],
+    "state": "open",
+    "title": "this is a PR, and not a draft"
+  }
+}

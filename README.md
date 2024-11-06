@@ -13,3 +13,17 @@ steps in the workflow.
   uses: quouch/check-workflow-type-action@v1
   id: check-workflow-type
 ```
+
+## Testing with [act](https://nektosact.com)
+
+You can test this action with [act](https://nektosact.com). Some example events are provided in the `examples` directory.
+
+### Push to main event
+```bash
+act push -e examples/push-to-main.json
+```
+
+### Pull request event
+```bash
+act pull_request -e examples/pull-request.json
+```
