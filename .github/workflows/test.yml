@@ -1,0 +1,22 @@
+name: CI Test
+
+on: [ push, pull_request ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+      - uses: papotte/workflow-type-check-action@main
+        name: Prepare Workspace
+  test:
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - run: echo ${{ needs.check.outputs.doBuild }}
+      - run: echo ${{ needs.check.outputs.doRelease }}
+      - run: echo ${{ needs.check.outputs.checkRelease }}
