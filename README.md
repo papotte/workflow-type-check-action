@@ -17,6 +17,16 @@ steps in the workflow.
   run: echo "This is a push workflow"
 ```
 
+## Outputs
+Defines the variables that will be available to other steps in the workflow.  
+- isPR: Indicates if the event is a pull request.
+- isDraft: Indicates if the pull request is a draft.
+- isPush: Indicates if the event is a push.
+- isMainBranch: Indicates if the push is to the main branch.
+- doBuild: Indicates if the project should be built.
+- doRelease: Indicates if the project should be released.
+- checkRelease: Indicates if the release should be checked but not released.
+
 ## Testing with [act](https://nektosact.com)
 
 You can test this action with [act](https://nektosact.com). Some example events are provided in the `examples` directory.

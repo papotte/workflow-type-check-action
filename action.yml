@@ -2,6 +2,18 @@ name: 'Set context variables'
 description: 'An action to set context variables for workflows'
 
 outputs:
+  isPR:
+    description: "is a pull request."
+    value: ${{ steps.vars.outputs.isPR }}
+  isDraft:
+    description: "is a draft pull request event."
+    value: ${{ steps.vars.outputs.isDraft }}
+  isPush:
+    description: "is a push event."
+    value: ${{ steps.vars.outputs.isPush }}
+  isMainBranch:
+    description: "is a push to the main branch."
+    value: ${{ steps.vars.outputs.isMainBranch }}
   doBuild:
     description: "should build the project."
     value: ${{ steps.set-type.outputs.doBuild }}
