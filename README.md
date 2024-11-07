@@ -10,7 +10,7 @@ steps in the workflow.
 
 ```yaml
 - name: Check workflow type
-  uses: quouch/check-workflow-type-action@v1
+  uses: papotte/workflow-type-check-action@v1
   id: check-workflow-type
 - name: Build action
   if: steps.check-workflow-type.outputs.doBuild
