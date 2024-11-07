@@ -22,10 +22,11 @@ runs:
         echo "isPush=${{ github.event_name == 'push' }}" >> $GITHUB_OUTPUT
         echo "isPR=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == false }}" >> $GITHUB_OUTPUT
         echo "isMainBranch=${{ contains(github.event.ref, 'refs/heads/main') }}" >> $GITHUB_OUTPUT
-        echo "isRelease=${{ github.event_name == 'release' }}" >> $GITHUB_OUTPUT
         echo "isTag=${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}" >> $GITHUB_OUTPUT
         echo "isDraft=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}" >> $GITHUB_OUTPUT
-        echo "isPreRelease=${{ github.event_name == 'release' && github.event.release.prerelease }}" >> $GITHUB_OUTPUT
+        echo "isReleaseDraft=${{ github.event_name == 'release' && github.event.release.draft == true }}" >> $GITHUB_OUTPUT
+        echo "isRelease=${{ github.event_name == 'release' }}" >> $GITHUB_OUTPUT
+        echo "isPreRelease=${{ github.event_name == 'release' && github.event.release.prerelease == true }}" >> $GITHUB_OUTPUT
         echo "forceBuild=${{ contains(github.event.pull_request.title, '[build]') }}" >> $GITHUB_OUTPUT
     - id: set-type
       shell: bash
@@ -41,5 +42,19 @@ runs:
         else
           echo "doBuild=false" >> $GITHUB_OUTPUT
         fi
-        echo "doRelease=${{ steps.vars.outputs.isRelease }}" >> $GITHUB_OUTPUT
-        echo "checkRelease=${{ steps.vars.outputs.isPreRelease }}" >> $GITHUB_OUTPUT
+        
+        isRelease=${{ steps.vars.outputs.isRelease }}
+        isPreRelease=${{ steps.vars.outputs.isPreRelease }}
+        isReleaseDraft=${{ steps.vars.outputs.isReleaseDraft }}
+        if $isRelease && !$isReleaseDraft; then
+          if $isPreRelease; then
+            echo "doRelease=false" >> $GITHUB_OUTPUT
+            echo "checkRelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "doRelease=true" >> $GITHUB_OUTPUT
+            echo "checkRelease=false" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "doRelease=false" >> $GITHUB_OUTPUT
+          echo "checkRelease=false" >> $GITHUB_OUTPUT
+        fi
