@@ -2,6 +2,9 @@ name: 'Set context variables'
 description: 'An action to set context variables for workflows'
 
 outputs:
+  isCI:
+    description: "is a CI change event."
+    value: ${{ steps.vars.outputs.isCI }}
   isPR:
     description: "is a pull request."
     value: ${{ steps.vars.outputs.isPR }}
@@ -40,6 +43,7 @@ runs:
         echo "isRelease=${{ github.event_name == 'release' }}" >> $GITHUB_OUTPUT
         echo "isPreRelease=${{ github.event_name == 'release' && github.event.release.prerelease == true }}" >> $GITHUB_OUTPUT
         echo "forceBuild=${{ contains(github.event.pull_request.title, '[build]') }}" >> $GITHUB_OUTPUT
+        echo "isCI=${{ contains(github.event.pull_request.title, 'ci:') }}" >> $GITHUB_OUTPUT
     - id: set-type
       shell: bash
       run: |
